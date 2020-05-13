@@ -4,19 +4,21 @@
 <@c.page>
 <div>
     <@l.logout />
+    <span><a href="/user">User list</a> </span>
 </div>
 <div>
-    <form method="post">
-        <input type="text" name="text" placeholder="Введите сообщение" />
-        <input type="text" name="tag" placeholder="Тэг">
+    <form method="post" enctype="multipart/form-data">
+        <input type="text" name="text" placeholder="Enter your message" />
+        <input type="text" name="tag" placeholder="Tag">
+        <input type="file" name="file">
         <input type="hidden" name="_csrf" value="${_csrf.token}" />
-        <button type="submit">Добавить</button>
+        <button type="submit">Add</button>
     </form>
 </div>
-<div>Список сообщений</div>
+<div>Message List</div>
 <form method="get" action="/main">
     <input type="text" name="filter" <#if filter??>value="${filter}"<#else>value=""</#if>>
-    <button type="submit">Найти</button>
+    <button type="submit">Find</button>
 </form>
 <#list messages as message>
 <div>
@@ -24,6 +26,11 @@
     <span>${message.text}</span>
     <i>${message.tag}</i>
     <strong>${message.authorName}</strong>
+    <div>
+        <#if message.filename??>
+            <img src="/img/${message.filename}"
+        </#if>
+    </div>
 </div>
 <#else>
 No message
