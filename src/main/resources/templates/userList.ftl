@@ -1,12 +1,12 @@
 <#import "parts/common.ftl" as c>
 <@c.page>
-    List of Users
-    <table>
-        <thead>
+    <div class="badge badge-primary text-wrap" style="width: 10rem; text-align: center; font-size: 18px; margin: 2px">List of Users</div>
+    <table class="table table-striped">
+        <thead class="thead-dark">
         <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th></th>
+            <th scope="col">Name</th>
+            <th scope="col">Role</th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>

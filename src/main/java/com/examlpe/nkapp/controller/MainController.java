@@ -1,14 +1,17 @@
 package com.examlpe.nkapp.controller;
 
+import com.examlpe.nkapp.domain.Basket;
 import com.examlpe.nkapp.domain.Message;
 import com.examlpe.nkapp.domain.User;
 import com.examlpe.nkapp.repos.MessageRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,11 +31,11 @@ public class MainController {
 
     @GetMapping("/")
     public String greeting(Map<String, Object> model) {
-        return "greeting";
+        return "article";
     }
 
     @GetMapping("/main")
-    public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
+    public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model, @AuthenticationPrincipal User user) {
         Iterable<Message> messages = messageRepo.findAll();
 
         if (filter != null && !filter.isEmpty()) {
@@ -41,7 +44,8 @@ public class MainController {
             messages = messageRepo.findAll();
         }
 
-        model.addAttribute("messages", messages);
+        model.addAttribute("user",user.getUsername());
+        model.addAttribute("messages", messages); // передается в обработчик спринга и эта модель конвертируется во вью
         model.addAttribute("filter", filter);
 
         return "main";
@@ -77,6 +81,14 @@ public class MainController {
 
         model.put("messages", messages);
 
-        return "main";
+        return "article";
+    }
+
+    @PostMapping("main/del/{message}")
+    public String deleteComputer(@PathVariable Message message){
+
+        messageRepo.delete(message);
+
+        return "redirect:/main";
     }
 }
